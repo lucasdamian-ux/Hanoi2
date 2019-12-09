@@ -77,7 +77,7 @@ def dessine_plateau(n):
     for i in range (3):
         t.up()
         t.pensize(1)
-        t.speed(1000)
+        t.speed(0)
         t.goto(-300+(2*i+1)*space+3*i,-200)
         t.down()
         t.goto(-300+(2*i+1)*space+3*i,-200+(n+1)*20)
@@ -98,7 +98,7 @@ def dessine_disque(nd,plateau,n):
     pd = i + 1
     disque=turtle.Turtle()
     disque.pensize(1)
-    disque.speed(1000)
+    disque.speed(0)
     disque.up()
     disque.goto(-300 + (2*nt+1)*space + 3*(nt+1) - spacend ,-200+ 20*(pd-1))
     disque.down()
@@ -124,7 +124,7 @@ def efface_disque(nd,plateau,n):
     pd = i + 1
     disque=turtle.Turtle()
     disque.pensize(1)
-    disque.speed(1000)
+    disque.speed(0)
     disque.up()
     disque.goto(-300 + (2*nt+1)*space + 3*(nt+1) - spacend ,-200+ 20*(pd-1)+1)
     disque.down()
@@ -195,6 +195,7 @@ def jouer_un_coup(plateau,n):
         return plateau,tourd,toura
 
 def boucle_jeu(plateau,n):
+    d={}
     i = 0
     limit = n * n - 1
     plateau1 = []
@@ -205,12 +206,15 @@ def boucle_jeu(plateau,n):
     while plateau != [[],[],plateau1] and i != limit:
         print("coup numéro",i+1)
         plateau,tourd,toura = jouer_un_coup(plateau,n)
+        d[i]=(toura+1)/(tourd+1)
         if plateau == -1:
             print("Abandon de la partie apres",i,"coups.")
             return 'Abandon',i
             break
         i += 1
-        b=input('Annuler dernier coup 
+        b=input('Annuler dernier coup ?')
+        if b=='oui' or b=='ok' or b=='o' or b=='yes':
+            annuler_dernier_coup(coups,numéro)
     if i == limit:
         print("Hors-limit.")
         return 'Hors-limit',i
@@ -237,3 +241,10 @@ while i != 0:
 plateau = [plateau1,[],[]]
 boucle_jeu(plateau,n)
 print("Au-revoir")
+
+def enregistre_score(nomdujoueur,nd,i):
+    import pickle
+    f=file.open('score','w')
+    pickle.dump(nomdujoueur,f)
+    pickle.dump(nd,f)
+    pickle.dump(i,f)
