@@ -1,0 +1,239 @@
+def init(n):
+    Hanoi = [[],[],[]]
+    i = n
+    while i != 0:
+        Hanoi[0].append(i)
+        i = i - 1
+    return Hanoi
+
+def nombre_disque(plateau,numtour):
+    num = len(plateau[numtour])
+    return num
+
+def disque_superieur(plateau,numtour):
+    t = plateau[numtour]
+    if t == []:
+        sup = -1
+    else:
+        sup = t[len(t)-1]
+    return sup
+
+def position_disque(plateau,numdisque):
+    num = 0
+    i = 0
+    while num == 0:
+        num = plateau[i].count(numdisque)
+        i = i + 1
+    return i - 1
+
+def position_disque(plateau,numdisque):
+    num = 0
+    i = 0
+    while num == 0:
+        tour = plateau[i]
+        for ii in range (len(tour)):
+            if tour[ii] == numdisque:
+                num = 1
+        i = i + 1
+    return i - 1
+
+def verfier_deplacement(plateau,nt1,nt2):
+    if disque_superieur(plateau,nt1) == -1:
+        return False
+    else:
+        if disque_superieur(plateau,nt1) < disque_superieur(plateau,nt2) or disque_superieur(plateau,nt2) == -1:
+            return True
+        else:
+            return False
+
+def verifier_victoire(plateau,n):
+    tour = []
+    i = n
+    while i != 0:
+        tour.append(i)
+        i = i -1
+    if plateau[2] == tour:
+        return True
+    else:
+        return False
+
+def dessine_plateau(n):
+    space = 20+(n-1)*15
+    import turtle
+    bs = turtle.Turtle()
+    bs.up()
+    bs.pensize(1)
+    bs.color('white')
+    bs.speed(1000)
+    bs.goto(-300, -200)
+    bs.down()
+    bs.pencolor('black')
+    bs.goto(-300+18+space*6,-200)
+    bs.goto(-300+18+space*6,-220)
+    bs.goto(-300,-220)
+    bs.goto(-300,-200)
+    bs.hideturtle()
+    t = turtle.Turtle()
+    for i in range (3):
+        t.up()
+        t.pensize(1)
+        t.speed(1000)
+        t.goto(-300+(2*i+1)*space+3*i,-200)
+        t.down()
+        t.goto(-300+(2*i+1)*space+3*i,-200+(n+1)*20)
+        t.goto(-300+(2*i+1)*space+6+3*i,-200+(n+1)*20)
+        t.goto(-300+(2*i+1)*space+6+3*i,-200)
+        t.hideturtle()
+
+def dessine_disque(nd,plateau,n):
+    space = 20+(n-1)*15
+    tour = position_disque(plateau,nd)
+    import turtle
+    spacend = 20 + 15*(nd-1)
+    nt = position_disque(plateau,nd)
+    tour = plateau[nt]
+    for i in range (len(tour)):
+        if tour[i] == nd:
+            break
+    pd = i + 1
+    disque=turtle.Turtle()
+    disque.pensize(1)
+    disque.speed(1000)
+    disque.up()
+    disque.goto(-300 + (2*nt+1)*space + 3*(nt+1) - spacend ,-200+ 20*(pd-1))
+    disque.down()
+    disque.begin_fill()
+    disque.fillcolor('white')
+    disque.goto(-300 + (2*nt+1)*space + 3*(nt+1) - spacend ,-200 + 20*pd)
+    disque.goto(-300 + (2*nt+1)*space + 3*(nt+1) - spacend  + 40+30*(nd-1),-200+ 20*pd)
+    disque.goto(-300 + (2*nt+1)*space + 3*(nt+1)- spacend  + 40+30*(nd-1),-200+ 20*(pd-1))
+    disque.goto(-300 + (2*nt+1)*space + 3*(nt+1) - spacend ,-200+ 20*(pd-1))
+    disque.end_fill()
+    disque.hideturtle()
+
+def efface_disque(nd,plateau,n):
+    space = 20+(n-1)*15
+    tour = position_disque(plateau,nd)
+    import turtle
+    spacend = 20 + 15*(nd-1)
+    nt = position_disque(plateau,nd)
+    tour = plateau[nt]
+    for i in range (len(tour)):
+        if tour[i] == nd:
+            break
+    pd = i + 1
+    disque=turtle.Turtle()
+    disque.pensize(1)
+    disque.speed(1000)
+    disque.up()
+    disque.goto(-300 + (2*nt+1)*space + 3*(nt+1) - spacend ,-200+ 20*(pd-1)+1)
+    disque.down()
+    disque.pencolor('white')
+    disque.goto(-300 + (2*nt+1)*space + 3*(nt+1) - spacend ,-200 + 20*pd)
+    disque.goto(-300 + (2*nt+1)*space + 3*(nt+1) - spacend + 40+30*(nd-1),-200+ 20*pd)
+    disque.goto(-300 + (2*nt+1)*space + 3*(nt+1) - spacend + 40+30*(nd-1),-200+ 20*(pd-1))
+    disque.hideturtle()
+    tour = turtle.Turtle()
+    tour.up()
+    tour.goto(-300+(2*nt+1)*space+3*nt,-200+20*(pd-1))
+    tour.down()
+    tour.goto(-300+(2*nt+1)*space+3*nt,-200+20*pd+1)
+    tour.up()
+    tour.goto(-300+(2*nt+1)*space+3*nt+6,-200+20*pd+1)
+    tour.down()
+    tour.goto(-300+(2*nt+1)*space+3*nt+6,-200+20*(pd-1))
+    tour.hideturtle()
+
+def dessine_config(plateau,n):
+    dessine_plateau(n)
+    for i in range (n):
+        dessine_disque(i+1,plateau,n)
+
+def efface_tout(plateau,n):
+    for i in range (n):
+        efface_disque(i+1,plateau,n)
+
+def lire_coords(plateau):
+    i = 1
+    while i == 1:
+        tourd=int(input('Tour de départ: '))
+        if tourd == -1:
+            T=input("Tu souhaites abandonner(o/n)?")
+            if T == "o":
+                T = -1
+                return T,T
+                i = 2
+            else:
+                tourd=int(input('Tour de départ: '))
+        if i != 2:
+            toura=int(input("Tour d'arrivée: "))
+            if plateau[tourd] == []:
+                print('Invalide, hors-rang.')
+            elif plateau[toura] == []:
+                i = 0
+                return tourd,toura
+            else:
+                if min(plateau[tourd]) < min(plateau[toura]):
+                    i = 0
+                    return tourd,toura
+                else:
+                    print('Invalide deplace')
+
+def jouer_un_coup(plateau,n):
+    tourd,toura = lire_coords(plateau)
+    if tourd == -1:
+        return (-1,-1,-1)
+    else:
+        x = min(plateau[tourd])
+        print("Je déplace le disque",x,"de la tour",tourd,"a la tour",toura)
+        dessine_plateau(n)
+        dessine_config(plateau,n)
+        efface_disque(x,plateau,n)
+        plateau[tourd].remove(x)
+        plateau[toura].append(x)
+        dessine_disque(x,plateau,n)
+        return plateau,tourd,toura
+
+def boucle_jeu(plateau,n):
+    i = 0
+    limit = n * n - 1
+    plateau1 = []
+    i = n
+    while i != 0:
+        plateau1.append(i)
+        i = i - 1
+    while plateau != [[],[],plateau1] and i != limit:
+        print("coup numéro",i+1)
+        plateau,tourd,toura = jouer_un_coup(plateau,n)
+        if plateau == -1:
+            print("Abandon de la partie apres",i,"coups.")
+            return 'Abandon',i
+            break
+        i += 1
+        b=input('Annuler dernier coup 
+    if i == limit:
+        print("Hors-limit.")
+        return 'Hors-limit',i
+    else:
+        print("Gagné apres",i,"coups.")
+        return True,i
+
+def dernier_coup(coups,numéro):
+    return coups[numéro]
+
+def annuler_dernier_coup(coups,numéro):
+    a=dernier_coup(coups,numéro)
+    efface_disque(a,plateau,n)
+    dessine_disque(a,plateau,n)
+    del coups[numéro]
+    i=i-1
+print("Bienvenue dans les Tours de Hanoi")
+n = int(input('combien de disques?'))
+plateau1 = []
+i = n
+while i != 0:
+    plateau1.append(i)
+    i = i - 1
+plateau = [plateau1,[],[]]
+boucle_jeu(plateau,n)
+print("Au-revoir")
